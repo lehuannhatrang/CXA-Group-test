@@ -1,0 +1,51 @@
+{
+  "name": "core_base",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "webpack-dev-server --host 0.0.0.0 --port 8000 --config ./webpack.config.js",
+    "start-dev": "webpack-dev-server --mode development --open",
+    "build": "NODE_ENV=production webpack --env prod"
+  },
+  "dependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/polyfill": "^7.11.5",
+    "@babel/preset-env": "^7.11.5",
+    "@babel/preset-react": "^7.10.4",
+    "babel-loader": "^8.1.0",
+    "babel-preset-react": "^6.24.1",
+    "copy-webpack-plugin": "^6.1.0",
+    "css-loader": "^4.3.0",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "file-loader": "^6.1.0",
+    "html-webpack-plugin": "^4.4.1",
+    "mini-css-extract-plugin": "^0.11.2",
+    "node-sass": "^4.14.1",
+    "postcss-loader": "^4.0.1",
+    "prop-types": "^15",
+    "react": "^16.7",
+    "react-big-calendar": "^0.27.0",
+    "react-dom": "^16",
+    "react-hot-loader": "^4",
+    "react-loadable": "^5.5.0",
+    "react-redux": "^7.2.1",
+    "react-router-config": "^5.1.1",
+    "react-router-dom": "^5.2.0",
+    "react-table": "^6.8.6",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
+    "sass": "^1.26.10",
+    "shards-react": "^1.0.3",
+    "style-loader": "^1.2.1",
+    "webpack-assets-manifest": "^3.1.1"
+  },
+  "devDependencies": {
+    "eslint": "^7",
+    "jest": "^26",
+    "sass-loader": "^7.1.0",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3",
+    "webpack-dev-server": "^3"
+  }
+}

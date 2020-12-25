@@ -1,0 +1,15 @@
+version: '3.7'
+services:
+  code-base:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: "code-base"
+    ports:
+    - "9000:80"
+    volumes:
+      - ./build:/usr/app
+    environment:
+      - NODE_ENV=production
+
+
