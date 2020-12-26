@@ -31,7 +31,7 @@ class Layout1 extends Component {
     let { settings } = this.props;
     return (
       <AppContext.Consumer>
-        {({ routes }) => {console.log(routes);return(
+        {({ routes }) => 
           <Container fluid>
             <Row>
               {/* <MainSidebar/> */}
@@ -39,6 +39,7 @@ class Layout1 extends Component {
                   className="main-content p-0"
                   // lg={{size: 10, offset: 2}}
                   // md={{size: 9, offset: 3}}
+                  // md='12'
                   sm="12"
                   tag="main"
               >
@@ -55,7 +56,6 @@ class Layout1 extends Component {
               </Col>
             </Row>
           </Container>
-        )}
         }
       </AppContext.Consumer>
     );

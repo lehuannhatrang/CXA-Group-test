@@ -1,60 +1,62 @@
 import React, {Component} from 'react';
-import sampleData from './sample-data'
 import {Col, Container, Row, Card, CardBody, CardHeader, Badge, CardFooter} from "shards-react";
 import PageTitle from '../../components/page-title';
 
 import {getJson} from "../../../utils";
 import { Link } from 'react-router-dom';
 
-const PAGE_SIZE = 4;
+const PAGE_SIZE = 20;
 
-class Home extends Component {
+class Search extends Component {
     constructor(props) {
         super(props)
+        const keyword = props.match.params.keyword;
         this.state = {
-            popularVideos: [],
-            topRateVideos: [],
-            popularPage: PAGE_SIZE,
-            topRatePage: PAGE_SIZE,
-        }
-        this.renderMovie = this.renderMovie.bind(this);
-        this.fetchPopularMovies = this.fetchPopularMovies.bind(this);
-        this.fetchTopRateMovies = this.fetchTopRateMovies.bind(this);
-    }
-
-    async fetchPopularMovies() {
-        const popular = await getJson('/movie/popular')
-        if(!!popular.movies) this.setState({popularVideos: popular.movies});
-    }
-
-    async fetchTopRateMovies() {
-        const topRates = await getJson('/movie/top-rates')
-        if(!!topRates.movies) this.setState({topRateVideos: topRates.movies});
-    }
-
-    handleLoadmorePopular() {
-        const newPopularPage = this.state.popularPage + PAGE_SIZE;
-
-        if(newPopularPage <= this.state.popularVideos.length) {
-            this.setState({popularPage: newPopularPage})
-        } else {
-            this.setState({popularPage: this.state.popularVideos.length})
+            page: PAGE_SIZE,
+            searchMovies: [],
+            keyword: keyword || '',
+            totalResults: 0,
         }
     }
 
-    handleLoadmoreTopRates() {
-        const newTopratePage = this.state.topRatePage + PAGE_SIZE;
+    async fetchsearchMovies() {
+        const search = await getJson('/movie/search', {keyword: this.state.keyword});
+        if(!!search.movies) {
+            this.setState({
+                searchMovies: search.movies,
+                totalResults: search.totalResults
+            });
+            if(this.state.page > search.movies.length) {
+                this.setState({
+                    page: search.movies.length,
+                })
+            }
+        }
+    }
 
-        if(newTopratePage <= this.state.topRateVideos.length) {
-            this.setState({topRatePage: newTopratePage})
+
+    handleLoadmore() {
+        const newPage = this.state.page + PAGE_SIZE;
+
+        if(newPage <= this.state.searchMovies.length) {
+            this.setState({page: newPage})
         } else {
-            this.setState({topRatePage: this.state.topRateVideos.length})
+            this.setState({page: this.state.searchMovies.length})
         }
     }
 
     componentDidMount() {
-        this.fetchPopularMovies()
-        this.fetchTopRateMovies();
+        this.fetchsearchMovies()
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const newKeyword = nextProps.match.params.keyword;
+        if(newKeyword !== this.state.keyword) {
+            this.setState({keyword: newKeyword}, (e) => {
+                this.fetchsearchMovies()
+            })
+            
+        }
     }
 
     renderMovie(movie, type) {
@@ -106,28 +108,27 @@ class Home extends Component {
     }
 
     render() {
+        const { searchMovies, page, keyword, totalResults } = this.state;
         return (
             <div className="pt-4">
-                <PageTitle title={'Popular'} subtitle={'movies'} />
-                <Row>
-                    {this.state.popularVideos.slice(0, this.state.popularPage).map(movie => this.renderMovie(movie, 'popular'))}
-                </Row>
+                <PageTitle title={'Search'} subtitle={'movies'} />
+                <h6 className="ml-2">
+                    <span>
+                        {`${totalResults} movies found with keyword "${keyword}"`}
+                    </span>
+                </h6>
+                {searchMovies.length > 0 && 
+                    <Row>
+                        {searchMovies.slice(0, page).map(movie => this.renderMovie(movie, 'search'))}
+                    </Row>
+                }
 
-                {this.state.popularPage < this.state.popularVideos.length && <Row className="justify-content-center">
-                    <Link to="#" title='Load more' onClick={() => this.handleLoadmorePopular()}>
+                {page < searchMovies.length && <Row className="justify-content-center">
+                    <Link to="#" title='Load more' onClick={() => this.handleLoadmore()}>
                         <h6 style={styles.getMore} className="fa fa-chevron-circle-down"></h6>
                     </Link>
                 </Row>}
                 
-                <PageTitle title={'Rates'} subtitle={'Top'} className="mt-4" />
-                <Row>
-                    {this.state.topRateVideos.slice(0, this.state.topRatePage).map(movie => this.renderMovie(movie, 'top'))}
-                </Row>
-                {this.state.topRatePage < this.state.topRateVideos.length && <Row className="justify-content-center">
-                    <Link to="#" title='Load more' onClick={() => this.handleLoadmoreTopRates()}>
-                        <h6 style={styles.getMore} className="fa fa-chevron-circle-down"></h6>
-                    </Link>
-                </Row>}
             </div>
         )
     }
@@ -158,4 +159,4 @@ const styles = {
     }
 }
 
-export default Home;
+export default Search;

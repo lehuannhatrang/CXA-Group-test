@@ -1,11 +1,12 @@
 # ignore node_modules
-./frontend/node_modules/
-./backend/node_modules/
+frontend/node_modules/
+backend/node_modules/
 
 # ignore .lock file
-./frontend/yarn.lock
-./backend/yarn.lock
+frontend/yarn.lock
+backend/yarn.lock
 
 # ignore dist folder
-./frontend/build/
-./backend/build/
+frontend/build/
+backend/dist/
+dist/

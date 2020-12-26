@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server --host 0.0.0.0 --port 8000 --config ./webpack.config.js",
     "start-dev": "webpack-dev-server --mode development --open",
-    "build": "NODE_ENV=production webpack --env prod"
+    "build": "mkdir -p ../dist/client && NODE_ENV=production webpack --env prod --mode production"
   },
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.10.4",
@@ -21,9 +21,11 @@
     "file-loader": "^6.1.0",
     "html-webpack-plugin": "^4.4.1",
     "mini-css-extract-plugin": "^0.11.2",
+    "moment": "^2.29.1",
     "node-sass": "^4.14.1",
     "postcss-loader": "^4.0.1",
     "prop-types": "^15",
+    "q": "^1.5.1",
     "react": "^16.7",
     "react-big-calendar": "^0.27.0",
     "react-dom": "^16",

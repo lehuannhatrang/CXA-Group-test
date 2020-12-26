@@ -8,10 +8,12 @@ const webpack = require('webpack');
 
 // Constant with our paths
 const paths = {
-    DIST: path.resolve(__dirname, './build'),
+    DIST: path.resolve(__dirname, '../dist/client'),
     SRC: path.resolve(__dirname, './src'),
     PUB: path.resolve(__dirname, './public'),
 };
+
+console.log(paths)
 
 // Webpack configuration
 module.exports = (env) => {
@@ -61,19 +63,6 @@ module.exports = (env) => {
                                 importLoaders: 2
                             }
                         },
-                        // {
-                        //     loader: 'postcss-loader',
-                        //     options: {
-                        //         ident: 'postcss',
-          
-                        //         plugins: () => [
-                        //                 postcssPresetEnv({
-                        //                     browsers: ['>1%']
-                        //                 }),
-                        //                 require('cssnano')()
-                        //             ]
-                        //     }
-                        // },
                         {
                             loader: 'sass-loader'
                         }

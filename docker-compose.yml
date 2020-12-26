@@ -1,0 +1,28 @@
+version: '3.7'
+services:
+  videohub-server:
+    build:
+      context: ./
+      dockerfile: Dockerfile.server
+    container_name: "videohub-server"
+    ports:
+    - "9001:3001"
+    volumes:
+    - ./dist/server:/usr/app
+    environment:
+    - TZ=Asia/Ho_Chi_Minh
+  videohub-client:
+    build:
+      context: ./
+      dockerfile: Dockerfile.client
+    container_name: "videohub-client"
+    ports:
+    - "9000:80"
+    volumes:
+      - ./dist/client:/usr/app
+    environment:
+      - NODE_ENV=production
+    links:
+      - videohub-server
+
+

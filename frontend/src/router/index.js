@@ -1,7 +1,8 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import homeRoutes from "./HomeRoutes";
-
+import notFoundRoutes from "./404";
+import searchRoutes from "./SearchRoute"
 // import loggingRoutes from "./views/logging/LoggingRoutes"
 
 const redirectRoute = [
@@ -14,13 +15,15 @@ const redirectRoute = [
 
 const errorRoute = [
   {
-    component: () => <Redirect to="/session/404" />
+    component: () => <Redirect to="/404" />
   }
 ];
 
 const routes = [
   ...redirectRoute,
   ...homeRoutes,
+  ...searchRoutes,
+  ...notFoundRoutes,
   ...errorRoute,
 ];
 
