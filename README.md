@@ -47,7 +47,7 @@ BACKEND_CLIENT_URL: 'https://wezone.vn/api',
 ```
 Into this:
 ```bash
-BACKEND_CLIENT_URL: 'https://localhost:9001/api',
+BACKEND_CLIENT_URL: 'http://localhost:9001/api',
 ```
 
 #### 2.2 Build dist folder
