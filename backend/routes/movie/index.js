@@ -8,7 +8,6 @@ const videoRoute = express.Router();
 const movieDbApiCOnfig = IndexConfig.MOVIE_DB_API
 
 videoRoute.get('/popular', async (req, res) => {
-    console.log('ok')
     const query = {
         api_key: movieDbApiCOnfig.api_key
     }
@@ -81,6 +80,45 @@ videoRoute.get('/search', async (req, res) => {
     }))
 
     HttpUtil.makeJsonResponse(res, {movies, totalResults: popularMovies.total_results})
+})
+
+
+videoRoute.get('/details', async (req, res) => {
+    const movieId = req.query.movieId;
+
+    if(!movieId) return HttpUtil.makeErrorResponse(res, Error.ITEM_NOT_FOUND)
+
+    const query = {
+        api_key: movieDbApiCOnfig.api_key
+    }
+    try {
+        const movie = await HttpUtil.getJson(`${movieDbApiCOnfig.url}/movie/${movieId}`, query);
+    
+        if(!movie) return HttpUtil.makeErrorResponse(res, 500)
+    
+        const movieDetails = {
+            adult: movie.adult,
+            backdropPath: `${IndexConfig.IMAGE_CLOUD_STORAGE_URI}${movie.backdrop_path}`,
+            id: movie.id,
+            overview: movie.overview,
+            title: movie.title,
+            popularity: movie.popularity,
+            voteAverage: movie.vote_average,
+            voteCount: movie.vote_count,
+            posterPath: `${IndexConfig.IMAGE_CLOUD_STORAGE_URI}${movie.poster_path}`,
+            budget: movie.budget,
+            originalLanguage: movie.original_language,
+            productionCompanies: movie.production_companies,
+            status: movie.status,
+            releaseDate: movie.release_date,
+            tagline: movie.tagline,
+        }
+    
+        HttpUtil.makeJsonResponse(res, {result: movieDetails})
+    } catch(e) {
+        console.log(`Error: ${e}`)
+        HttpUtil.makeErrorResponse(res, Error.ITEM_NOT_FOUND)
+    }
 })
 
 export default videoRoute;
