@@ -11,6 +11,9 @@ services:
     - ./dist/server:/usr/app
     environment:
     - TZ=Asia/Ho_Chi_Minh
+    networks:
+      - videohub-network
+
   videohub-client:
     build:
       context: ./
@@ -24,5 +27,14 @@ services:
       - NODE_ENV=production
     links:
       - videohub-server
+    depends_on: 
+      - videohub-server
+    networks:
+      - videohub-network
+
+networks:
+  videohub-network:
+    driver: bridge
+
 
 

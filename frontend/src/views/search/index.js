@@ -16,32 +16,51 @@ class Search extends Component {
             searchMovies: [],
             keyword: keyword || '',
             totalResults: 0,
+            pageIndex: 1
         }
     }
 
     async fetchsearchMovies() {
-        const search = await getJson('/movie/search', {keyword: this.state.keyword});
+        const search = await getJson('/movie/search', {keyword: this.state.keyword, pageIndex: 1});
         if(!!search.movies) {
             this.setState({
                 searchMovies: search.movies,
-                totalResults: search.totalResults
+                totalResults: search.totalResults,
+                page: PAGE_SIZE,
+                pageIndex: 1
             });
-            if(this.state.page > search.movies.length) {
-                this.setState({
-                    page: search.movies.length,
-                })
-            }
+            // if(this.state.page > search.movies.length) {
+            //     this.setState({
+            //         page: search.movies.length,
+            //     })
+            // }
+        }
+    }
+
+    async fetchMoreData() {
+        const { pageIndex, searchMovies } = this.state;
+        const search = await getJson('/movie/search', {keyword: this.state.keyword, pageIndex: pageIndex + 1});
+        if(!!search.movies) {
+            this.setState({
+                searchMovies: [
+                    ...searchMovies,
+                    ...search.movies
+                ],
+                pageIndex: pageIndex + 1
+            });
+            return search.movies.length
         }
     }
 
 
-    handleLoadmore() {
-        const newPage = this.state.page + PAGE_SIZE;
+    async handleLoadmore() {
+        const moreDataLength = await this.fetchMoreData();
 
-        if(newPage <= this.state.searchMovies.length) {
+        const newPage = this.state.page + moreDataLength;
+        if(newPage <= this.state.totalResults) {
             this.setState({page: newPage})
         } else {
-            this.setState({page: this.state.searchMovies.length})
+            this.setState({page: this.state.totalResults})
         }
     }
 
@@ -112,9 +131,9 @@ class Search extends Component {
         return (
             <div className="pt-4">
                 <PageTitle title={'Search'} subtitle={'movies'} />
-                <h6 className="ml-2">
+                <h6 className="mr-2" style={styles.totalNumberResults}>
                     <span>
-                        {`${totalResults} movies found with keyword "${keyword}"`}
+                        {`${totalResults} movies was founded with keyword "${keyword}"`}
                     </span>
                 </h6>
                 {searchMovies.length > 0 && 
@@ -123,7 +142,7 @@ class Search extends Component {
                     </Row>
                 }
 
-                {page < searchMovies.length && <Row className="justify-content-center">
+                {page < totalResults && <Row className="justify-content-center">
                     <Link to="#" title='Load more' onClick={() => this.handleLoadmore()}>
                         <h6 style={styles.getMore} className="fa fa-chevron-circle-down"></h6>
                     </Link>
@@ -148,6 +167,9 @@ const styles = {
         display: '-webkit-box',
         WebkitBoxOrient: 'vertical',
         WebkitLineClamp: '4',
+    },
+    totalNumberResults: {
+        textAlign: 'right'
     },
     voteAverage: {
         fontSize: 15

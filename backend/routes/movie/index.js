@@ -8,6 +8,7 @@ const videoRoute = express.Router();
 const movieDbApiCOnfig = IndexConfig.MOVIE_DB_API
 
 videoRoute.get('/popular', async (req, res) => {
+    console.log('ok')
     const query = {
         api_key: movieDbApiCOnfig.api_key
     }
@@ -55,10 +56,14 @@ videoRoute.get('/top-rates', async (req, res) => {
 
 videoRoute.get('/search', async (req, res) => {
     const keyword = req.query.keyword;
+
+    const page = req.query.pageIndex || 1;
+
     if(!keyword) return HttpUtil.makeErrorResponse(res, Error.ITEM_NOT_FOUND)
     const query = {
         api_key: movieDbApiCOnfig.api_key,
-        query: keyword
+        query: keyword,
+        page
     }
     const popularMovies = await HttpUtil.getJson(`${movieDbApiCOnfig.url}/search/movie`, query);
 
