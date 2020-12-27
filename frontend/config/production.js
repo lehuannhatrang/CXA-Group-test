@@ -1,4 +1,4 @@
 export default {
-    BACKEND_CLIENT_URL: 'http://localhost:9001/api',
-    FRONTEND_CLIENT_URL: 'http://localhost:9000'
+    BACKEND_CLIENT_URL: 'https://wezone.vn/api',
+    FRONTEND_CLIENT_URL: 'https://wezone.vn:9000'
 }

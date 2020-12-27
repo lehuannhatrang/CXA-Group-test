@@ -3,7 +3,7 @@ import { Redirect } from "react-router-dom";
 import homeRoutes from "./HomeRoutes";
 import notFoundRoutes from "./404";
 import searchRoutes from "./SearchRoute"
-// import loggingRoutes from "./views/logging/LoggingRoutes"
+import DetailRoutes from "./MovieDetails"
 
 const redirectRoute = [
   {
@@ -23,6 +23,7 @@ const routes = [
   ...redirectRoute,
   ...homeRoutes,
   ...searchRoutes,
+  ...DetailRoutes,
   ...notFoundRoutes,
   ...errorRoute,
 ];

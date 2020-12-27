@@ -7,7 +7,10 @@ class Loading extends Component {
 
     render() {
         return (
-            <div>ok</div>
+            <div className={`${this.props.className} sk-chasing-dots`} style={{...this.props.style}}>
+                <div className="sk-child sk-dot1"></div>
+                <div className="sk-child sk-dot2"></div>
+            </div>
         )
     }
 }

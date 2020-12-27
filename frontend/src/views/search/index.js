@@ -4,6 +4,7 @@ import PageTitle from '../../components/page-title';
 
 import {getJson} from "../../../utils";
 import { Link } from 'react-router-dom';
+import Loading from '../../components/Loading';
 
 const PAGE_SIZE = 20;
 
@@ -16,25 +17,27 @@ class Search extends Component {
             searchMovies: [],
             keyword: keyword || '',
             totalResults: 0,
-            pageIndex: 1
+            pageIndex: 1,
+            loading: false
         }
     }
 
     async fetchsearchMovies() {
+        await this.setState({loading: true});
         const search = await getJson('/movie/search', {keyword: this.state.keyword, pageIndex: 1});
         if(!!search.movies) {
             this.setState({
                 searchMovies: search.movies,
                 totalResults: search.totalResults,
                 page: PAGE_SIZE,
-                pageIndex: 1
+                pageIndex: 1,
+                loading: false
             });
-            // if(this.state.page > search.movies.length) {
-            //     this.setState({
-            //         page: search.movies.length,
-            //     })
-            // }
         }
+    }
+    
+    navigateToDetails(movideId) {
+        if(!!movideId) this.props.history.push(`/movie/${movideId}`)
     }
 
     async fetchMoreData() {
@@ -46,7 +49,7 @@ class Search extends Component {
                     ...searchMovies,
                     ...search.movies
                 ],
-                pageIndex: pageIndex + 1
+                pageIndex: pageIndex + 1,
             });
             return search.movies.length
         }
@@ -88,7 +91,7 @@ class Search extends Component {
                             backgroundImage: movie.backdropPath ? `url(${movie.backdropPath})`: `url("https://image.tmdb.org/t/p/w1280/gmL6MSH3jK2T7zYvzo9dIZb393c.jpg")`,
                             height: 300
                         }}
-                        onClick={() => {}}
+                        onClick={() => this.navigateToDetails(movie.id)}
                         >
                             {!!movie.adult && <Badge
                             pill
@@ -100,10 +103,10 @@ class Search extends Component {
                         </div>
                     </CardHeader>
                     <CardBody className="p-3 pt-4" style={styles.cardBody}>
-                        <h5 className="card-title mb-1 text-info pointer" onClick={() => {}}>
+                        <h5 className="card-title mb-1 text-info pointer" onClick={() => this.navigateToDetails(movie.id)}>
                             {movie.title}
                         </h5>
-                        <h6 className="text-muted pointer" onClick={() => {}} style={styles.overviewSection}>
+                        <h6 className="text-muted" onClick={() => {}} style={styles.overviewSection}>
                             <i>{movie.overview}</i>
                         </h6>
                     </CardBody>
@@ -127,7 +130,7 @@ class Search extends Component {
     }
 
     render() {
-        const { searchMovies, page, keyword, totalResults } = this.state;
+        const { searchMovies, page, keyword, totalResults, loading } = this.state;
         return (
             <div className="pt-4">
                 <PageTitle title={'Search'} subtitle={'movies'} />
@@ -136,13 +139,14 @@ class Search extends Component {
                         {`${totalResults} movies was founded with keyword "${keyword}"`}
                     </span>
                 </h6>
-                {searchMovies.length > 0 && 
+                {!!loading && <Loading /> }
+                {!loading && 
                     <Row>
                         {searchMovies.slice(0, page).map(movie => this.renderMovie(movie, 'search'))}
                     </Row>
                 }
 
-                {page < totalResults && <Row className="justify-content-center">
+                {page < totalResults && !loading && <Row className="justify-content-center">
                     <Link to="#" title='Load more' onClick={() => this.handleLoadmore()}>
                         <h6 style={styles.getMore} className="fa fa-chevron-circle-down"></h6>
                     </Link>

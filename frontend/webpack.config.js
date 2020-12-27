@@ -120,6 +120,7 @@ module.exports = (env) => {
                 patterns: [
                     {from: path.join(paths.PUB, 'assets/imgs'), to: 'assets/imgs'},
                     {from: path.join(paths.PUB, 'style.css'), to: 'style.css'},
+                    {from: path.join(paths.PUB, 'assets/css'), to: 'assets/css'},
                 ],
             }),
             new WebpackAssetsManifest(),

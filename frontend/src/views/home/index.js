@@ -5,6 +5,7 @@ import PageTitle from '../../components/page-title';
 
 import {getJson} from "../../../utils";
 import { Link } from 'react-router-dom';
+import Loading from '../../components/Loading';
 
 const PAGE_SIZE = 4;
 
@@ -16,6 +17,7 @@ class Home extends Component {
             topRateVideos: [],
             popularPage: PAGE_SIZE,
             topRatePage: PAGE_SIZE,
+            loading: true,
         }
         this.renderMovie = this.renderMovie.bind(this);
         this.fetchPopularMovies = this.fetchPopularMovies.bind(this);
@@ -52,9 +54,15 @@ class Home extends Component {
         }
     }
 
+    navigateToDetails(movideId) {
+        if(!!movideId) this.props.history.push(`/movie/${movideId}`)
+    }
+
     componentDidMount() {
+        this.setState({loading: true,})
         this.fetchPopularMovies()
         this.fetchTopRateMovies();
+        this.setState({loading: false})
     }
 
     renderMovie(movie, type) {
@@ -67,7 +75,7 @@ class Home extends Component {
                             backgroundImage: movie.backdropPath ? `url(${movie.backdropPath})`: `url("https://image.tmdb.org/t/p/w1280/gmL6MSH3jK2T7zYvzo9dIZb393c.jpg")`,
                             height: 300
                         }}
-                        onClick={() => {}}
+                        onClick={() => this.navigateToDetails(movie.id)}
                         >
                             {!!movie.adult && <Badge
                             pill
@@ -79,10 +87,10 @@ class Home extends Component {
                         </div>
                     </CardHeader>
                     <CardBody className="p-3 pt-4" style={styles.cardBody}>
-                        <h5 className="card-title mb-1 text-info pointer" onClick={() => {}}>
+                        <h5 className="card-title mb-1 text-info pointer" onClick={() => this.navigateToDetails(movie.id)}>
                             {movie.title}
                         </h5>
-                        <h6 className="text-muted pointer" onClick={() => {}} style={styles.overviewSection}>
+                        <h6 className="text-muted" onClick={() => {}} style={styles.overviewSection}>
                             <i>{movie.overview}</i>
                         </h6>
                     </CardBody>
@@ -106,14 +114,23 @@ class Home extends Component {
     }
 
     render() {
+        const { loading, popularVideos, popularPage, topRatePage, topRateVideos } = this.state;
+        if(!!loading) return <Loading/>
         return (
-            <div className="pt-4">
-                <PageTitle title={'Popular'} subtitle={'movies'} />
-                <Row>
-                    {this.state.popularVideos.slice(0, this.state.popularPage).map(movie => this.renderMovie(movie, 'popular'))}
+            <div className="">
+                <Row className="mb-4 mt-0" style={styles.welcomeBg}>
+                    <Col className="ml-4" style={styles.welcomeTitle}>
+                        <h1 style={{color: 'white'}}>Welcome.</h1>
+                        <h3 style={{color: 'white'}}>Millions of movies to discover.</h3>
+                    </Col>
                 </Row>
 
-                {this.state.popularPage < this.state.popularVideos.length && <Row className="justify-content-center">
+                <PageTitle title={'Popular'} subtitle={'movies'} />
+                <Row>
+                    {popularVideos.slice(0, popularPage).map(movie => this.renderMovie(movie, 'popular'))}
+                </Row>
+
+                {popularPage < popularVideos.length && <Row className="justify-content-center">
                     <Link to="#" title='Load more' onClick={() => this.handleLoadmorePopular()}>
                         <h6 style={styles.getMore} className="fa fa-chevron-circle-down"></h6>
                     </Link>
@@ -121,9 +138,9 @@ class Home extends Component {
                 
                 <PageTitle title={'Rates'} subtitle={'Top'} className="mt-4" />
                 <Row>
-                    {this.state.topRateVideos.slice(0, this.state.topRatePage).map(movie => this.renderMovie(movie, 'top'))}
+                    {topRateVideos.slice(0, topRatePage).map(movie => this.renderMovie(movie, 'top'))}
                 </Row>
-                {this.state.topRatePage < this.state.topRateVideos.length && <Row className="justify-content-center">
+                {topRatePage < topRateVideos.length && <Row className="justify-content-center">
                     <Link to="#" title='Load more' onClick={() => this.handleLoadmoreTopRates()}>
                         <h6 style={styles.getMore} className="fa fa-chevron-circle-down"></h6>
                     </Link>
@@ -155,6 +172,15 @@ const styles = {
         fontSize: 40,
         color: '#bbb8b8',
 
+    },
+    welcomeBg: {
+        backgroundImage: `url("/assets/imgs/moviehub-background.jpg"`,
+        position: 'relative',
+        height: 400,
+    },
+    welcomeTitle: {
+        position: 'absolute',
+        top: '20%',
     }
 }
 

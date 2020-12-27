@@ -37,7 +37,7 @@ class SearchBar extends Component {
           </InputGroupAddon>
           <FormInput
             className="navbar-search"
-            placeholder="Search for videos..."
+            placeholder="Search for movies..."
             onChange={(e) => this.setState({keyword: e.target.value})}
           />
           <InputGroupAddon type="append">
